@@ -15,7 +15,12 @@ export default function Page() {
       <Link
         href="/modules"
       >
-        See all Modules
+        See all Components
+      </Link>
+      <Link
+        href="/layouts"
+      >
+        See all Layouts
       </Link>
     </DefaultLayout>
   )

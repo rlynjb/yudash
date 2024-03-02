@@ -2,7 +2,8 @@
   "/_app": "pages/_app.js",
   "/_error": "pages/_error.js",
   "/_document": "pages/_document.js",
-  "/modules/[name]": "pages/modules/[name].js",
+  "/": "pages/index.js",
   "/modules": "pages/modules.js",
-  "/": "pages/index.js"
+  "/modules/[name]": "pages/modules/[name].js",
+  "/layouts": "pages/layouts.js"
 }

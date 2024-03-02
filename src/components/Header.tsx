@@ -1,7 +1,11 @@
+import Link from 'next/link'
+
 export default function Header() {
   return <header>
     <div className="container mx-auto py-6">
-      the wandrr
+      <Link href="/">
+        yudash
+      </Link>
     </div>
   </header>
 }
