@@ -1,5 +1,9 @@
 export default function Breadcrumbs() {
-  return <div>
-    <span>Home > asd</span>
+  return <div className="text-sm breadcrumbs">
+    <ul>
+      <li><a>Home</a></li> 
+      <li><a>Documents</a></li> 
+      <li>Add Document</li>
+    </ul>
   </div>
 }

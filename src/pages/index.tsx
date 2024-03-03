@@ -1,27 +1,36 @@
-import Link from 'next/link'
 import DefaultLayout from '@/layouts/default'
+import Button from '@/components/Button'
 
 export default function Page() {
   return (
     <DefaultLayout>
-      <h1 className="text-3xl font-bold underline">
-        welcome to Data Visualization Guideline
-      </h1>
+      <div className="text-center">
+        <h1 className="text-3xl font-bold">
+          welcome to Data Visualization Guideline
+        </h1>
 
-      <p>
-        hows d3 earth and table
-      </p>
+        <p className="mt-4 mb-6">
+          hows d3 earth and table
+        </p>
 
-      <Link
-        href="/modules"
-      >
-        See all Components
-      </Link>
-      <Link
-        href="/layouts"
-      >
-        See all Layouts
-      </Link>
+        <Button
+          className="mr-6"
+          href="/modules"
+        >
+          Components
+        </Button>
+
+        <Button
+          className="mr-6"
+          href="/layouts"
+        >
+          Layouts
+        </Button>
+
+        <Button>
+          Icons
+        </Button>
+      </div>
     </DefaultLayout>
   )
 }

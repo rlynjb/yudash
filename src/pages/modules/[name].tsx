@@ -1,4 +1,4 @@
-import ModuleLayout from '@/layouts/ModuleLayout'
+import ModuleLayout from '@/layouts/modules'
 import { useRouter } from 'next/router'
 import Breadcrumbs from '@/components/Breadcrumbs'
 
