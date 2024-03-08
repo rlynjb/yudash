@@ -5,12 +5,16 @@ import DefaultLayout from '@/layouts/default'
 export default function Layout({ children }) {
   const [modules] = useState([
     {
-      label: 'D3.js',
-      url: '/modules/d3'
+      label: 'Breadcrumb',
+      url: '/modules/breadcrumb'
     },
     {
       label: 'Table',
       url: '/modules/table'
+    },
+    {
+      label: 'Select Multiple Field',
+      url: '/modules/select-multiple-field'
     }
   ])
 
