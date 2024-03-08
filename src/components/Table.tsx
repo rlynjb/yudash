@@ -45,6 +45,7 @@ const Table = ({
   rows = [],
 }: Props) => {
 
+  // Note: Start adding features
 
   return (
     <div className="overflow-x-auto">
