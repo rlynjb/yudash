@@ -44,8 +44,15 @@ const Table = ({
   columns = [],
   rows = [],
 }: Props) => {
-
-  // Note: Start adding features
+  /*
+    TODO:
+    - Plugin in Faker.js as State
+    --- Read about about global state management in react using useContext and useReducer Hooks
+    - Move Table features from vue to react
+    --- Build a way to interactively load data (user gets to choose the data amount, fields)
+    --- Build a way to interact with Features  (user gets to toggle features and see it happen in realtime)
+    - Apply Unit testing. Jest or check out what next,js has to offer.
+  */
 
   return (
     <div className="overflow-x-auto">
