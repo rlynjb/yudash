@@ -5,7 +5,7 @@ type Props = {
   children?: ReactNode,
   grid?: number,
   cols?: number,
-  onCols: any,
+  onCols?: any,
 }
 
 export default function SwitchLayout({
@@ -50,25 +50,24 @@ export default function SwitchLayout({
 
   const colsChange = (val: any) => {
     setl_cols(val.target.value)
-    console.log(onCols)
-    // look into emitting to parent
+    onCols(val)
   }
 
   return (
-    <div className="layout-switch grid grid-cols-3 gap-4">
+    <div className="layout-switch flex items-center">
       <span>
-        cols-span-
+        Layout viewport: col-span-
       </span>
       <div>
         <input
           type="text"
           value={l_cols}
           onChange={colsChange}
-          className="input w-full max-w-xs"
+          className="input w-full max-w-xs w-16 rounded-none"
         />
       </div>
-      <span>
-        12 grid
+      <span className="ml-2">
+        of 12 grid
       </span>
 
       {/** 
