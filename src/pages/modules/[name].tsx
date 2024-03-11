@@ -2,7 +2,7 @@ import ModuleLayout from '@/layouts/modules'
 import { useRouter } from 'next/router'
 import Breadcrumbs from '@/components/Breadcrumbs'
 import Table from '@/components/Table'
-import AdjustLayout from '@/features/SwitchLayout'
+import ChangeViewport from '@/features/ChangeViewport'
 import { useState } from 'react'
 
 export default function Page() {
@@ -25,7 +25,7 @@ export default function Page() {
         </h1>
 
         <div className="bg-black p-3 rounded-none mt-4">
-          <AdjustLayout onCols={listenCols} />
+          <ChangeViewport onCols={listenCols} />
         </div>
         
         <div className="my-6 card bg-base-200 shadow-xl rounded-none grid grid-cols-12">

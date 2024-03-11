@@ -1,5 +1,4 @@
 import { useState, ReactNode} from 'react'
-import PropTypes from "prop-types"
 
 type Props = {
   children?: ReactNode,
@@ -8,7 +7,7 @@ type Props = {
   onCols?: any,
 }
 
-export default function SwitchLayout({
+export default function ChangeViewport({
   children,
   grid = 12,
   cols = 12,
