@@ -9,3 +9,4 @@ https://nextjs.org/docs/getting-started/installation
 - Create Unit Test with jest
 - Build out Theme generator that alters global theming. ex. DaisyUI
 - ~~Add layout changer. its going to be a div wrapped around component and we can change col-span. to view how its displayed in different layout~~
+- add system design page or section using mermaid.js
