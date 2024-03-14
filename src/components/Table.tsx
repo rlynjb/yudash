@@ -53,7 +53,6 @@ const Table = ({
   */
   const selector_lookup = {}
   const [l_rows, set_l_rows] = useState([])
-  //let l_rows = []
 
   /*
     @param rows [object] An array of objects containing row data
@@ -119,13 +118,24 @@ const Table = ({
   }, [rows])
 
 
-
   const selector_selectItem = (e: any, row: any) => {
+    console.log('asd - ', selector_lookup[row.raw.id])
+
+    /*
+      TODO:
+      look into using useState with object as value
+    */
+
+    debugger
     if (selector_lookup[row.raw.id]) {
+      debugger
       delete selector_lookup[row.raw.id]
+      matchColumnsAndRows()
       return
     } else {
+      debugger
       selector_lookup[row.raw.id] = row.raw
+      matchColumnsAndRows()
       return
     }
   }
@@ -137,7 +147,6 @@ const Table = ({
         selector_lookup[row.id] = row
       })
       matchColumnsAndRows()
-      console.log('l_rows - ', l_rows)
       return
 
     } else {
@@ -146,7 +155,6 @@ const Table = ({
         delete selector_lookup[row.id]
       })
       matchColumnsAndRows()
-      console.log('l_rows - ', l_rows)
       return
     }
   }
@@ -186,8 +194,6 @@ const Table = ({
       </tr>
     )
   })
-
-  console.log('l_rows - ', l_rows)
 
 
   return (
