@@ -1,4 +1,4 @@
-import React from 'react'
+import { useState, useEffect, ReactNode } from 'react'
 
 /**
  * The column available settings for table.
@@ -34,80 +34,146 @@ import React from 'react'
  */
 
 type Props = {
-  children?: React.ReactNode,
+  children?: ReactNode,
   columns?: any[],
-  rows?: any[]
+  rows?: any[],
+  selector?: boolean,
 }
 
 const Table = ({
   children,
   columns = [],
   rows = [],
+  selector = false,
 }: Props) => {
+  /*
+    TODO:
+    - work on selector feature
+    - separator
+  */
+  const selector_lookup = {}
+  const [l_rows, set_l_rows] = useState([])
+  //let l_rows = []
 
   /*
-  @param rows [object] An array of objects containing row data
-  @param columns [object] An array of objects containing column data
+    @param rows [object] An array of objects containing row data
+    @param columns [object] An array of objects containing column data
 
-  @return private_rows [object] An array of mapped objects
-*/
-  const l_rows = rows.map((row: any) => {
-    const rowdata: any = {
-      display: {},
-      raw: { ...row },
-      settings_align: {}, // field_name/column: row_value (object || string)
-      settings_customButtons: {}, // field_name/column: row_value (object || string)
-      settings_asLink: {}, // field_name/column: row_value (object || string)
-      settings_asButton: {},
-      settings_asMultipleButtons: {},
-      settings_selectAll: {},
-    };
+    @return private_rows [object] An array of mapped objects
+  */
+  const matchColumnsAndRows = () => {
+    const s_rows = rows.map((row: any) => {
+      const rowdata: any = {
+        display: {},
+        raw: { ...row },
+        settings_align: {}, // field_name/column: row_value (object || string)
+        settings_customButtons: {}, // field_name/column: row_value (object || string)
+        settings_asLink: {}, // field_name/column: row_value (object || string)
+        settings_asButton: {},
+        settings_asMultipleButtons: {},
+        settings_selected: false,
+        settings_separate: {},
+      };
 
-    columns.forEach((col: any) => {
-      rowdata.display[col.field] = row[col.field];
-
-      if (col.align) {
-        rowdata.settings_align[col.field] = col.align;
+      if (selector) {
+        rowdata.settings_selected = selector_lookup[row.id] ? true : false
       }
 
-      if (col.customButtons) {
-        rowdata.settings_customButtons[col.field] = col.customButtons;
-      }
+      columns.forEach((col: any) => {
+        rowdata.display[col.field] = row[col.field];
 
-      // if a link is set, add to settings field as key and
-      // which property value it will be set as a link
-      if (col.asLink) {
-        rowdata.settings_asLink[col.field] = true;
-      }
-
-      if (col.asButton) {
-        rowdata.settings_asButton[col.field] = true;
-      }
-
-      if (col.asMultipleButtons) {
-        rowdata.settings_asMultipleButtons[col.field] = true;
-      }
-
-      if (col.selectAll) {
-        rowdata.settings_selectAll[col.field] = {
-          emit: col.emit,
-          //value: check_selectAll_dictionary(row.guid, private_lookup)
+        if (col.align) {
+          rowdata.settings_align[col.field] = col.align;
         }
-      }
+
+        if (col.customButtons) {
+          rowdata.settings_customButtons[col.field] = col.customButtons;
+        }
+
+        if (col.asLink) {
+          rowdata.settings_asLink[col.field] = true;
+        }
+
+        if (col.asButton) {
+          rowdata.settings_asButton[col.field] = true;
+        }
+
+        if (col.asMultipleButtons) {
+          rowdata.settings_asMultipleButtons[col.field] = true;
+        }
+
+        if (col.separate) {
+          rowdata.settings_separate[col.field] = true
+        }
+      })
+
+      return rowdata
     })
-    return rowdata
-  })
+
+    set_l_rows(s_rows)
+  }
 
 
+  useEffect(() => {
+    matchColumnsAndRows()
+  }, [rows])
+
+
+
+  const selector_selectItem = (e: any, row: any) => {
+    if (selector_lookup[row.raw.id]) {
+      delete selector_lookup[row.raw.id]
+      return
+    } else {
+      selector_lookup[row.raw.id] = row.raw
+      return
+    }
+  }
+
+  const selector_selectAll = (e: any) => {
+    if (e.target.checked) {
+      // add all l_rows in selector_lookup
+      rows.forEach((row: any) => {
+        selector_lookup[row.id] = row
+      })
+      matchColumnsAndRows()
+      console.log('l_rows - ', l_rows)
+      return
+
+    } else {
+      // remove all l_rows in selector_lookup
+      rows.forEach((row: any) => {
+        delete selector_lookup[row.id]
+      })
+      matchColumnsAndRows()
+      console.log('l_rows - ', l_rows)
+      return
+    }
+  }
+
+
+  // ------ JSX stuff ------
   const t_columns = columns.map((col: any, key: any) => {
     return (
-      <th key={key}>{col.name}</th>
+      <th key={key}>
+        {col.name}
+      </th>
     )
   })
 
   const t_rows = l_rows.map((row: any, rowkey: any) => {
     return (
       <tr key={rowkey}>
+        { selector && 
+          <td>
+            <input
+              type="checkbox"
+              onChange={(e) => selector_selectItem(e, row)}
+              checked={row.settings_selected}
+            />
+          </td>
+        }
+        
         {
           Object.keys(row.display).map((rowcolumn: any, rowcolumnkey: any) => {
             return (
@@ -129,6 +195,12 @@ const Table = ({
       <table className="table">
         <thead>
           <tr>
+            { selector && 
+              <th>
+                <input type="checkbox" onChange={selector_selectAll} />
+              </th>
+            }
+
             {t_columns}
           </tr>
         </thead>

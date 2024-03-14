@@ -25,6 +25,7 @@ export default function Page() {
   const sample_data = []
   for (let i=0; i<10; i++) {
     sample_data.push({
+      id: faker.string.alphanumeric(20),
       firstName: faker.person.firstName(),
       lastName: faker.person.lastName(),
       jobTitle: faker.person.jobTitle(),
@@ -62,6 +63,7 @@ export default function Page() {
                 <Table
                   columns={table_columns}
                   rows={sample_data}
+                  selector={true}
                 /> 
             }
           </div>
