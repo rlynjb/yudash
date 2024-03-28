@@ -1,4 +1,9 @@
-import { useState, useEffect, ReactNode } from 'react'
+import {
+  useState,
+  useEffect,
+  ReactNode,
+  useReducer
+} from 'react'
 
 /**
  * The column available settings for table.
@@ -51,8 +56,9 @@ const Table = ({
     - work on selector feature
     - separator
   */
-  const selector_lookup = {}
   const [l_rows, set_l_rows] = useState([])
+  const [selector_lookup, set_selector_lookup] = useState({})
+  const u_selector_lookup = {}
 
   /*
     @param rows [object] An array of objects containing row data
@@ -75,7 +81,7 @@ const Table = ({
       };
 
       if (selector) {
-        rowdata.settings_selected = selector_lookup[row.id] ? true : false
+        rowdata.settings_selected = selector_lookup.hasOwnProperty(row.id) ? true : false
       }
 
       columns.forEach((col: any) => {
@@ -112,47 +118,99 @@ const Table = ({
     set_l_rows(s_rows)
   }
 
-
+  /*
+    NOTE:
+    https://stackoverflow.com/questions/55265604/uncaught-invariant-violation-too-many-re-renders-react-limits-the-number-of-re
+  */
   useEffect(() => {
     matchColumnsAndRows()
   }, [rows])
 
+  
+  // ------ Reducer stuff ------
+  const reducer_selector = (state, action) => {
+    console.log('state - ', state)
+    console.log('action - ', action)
+
+    switch (action.type) {
+      case 'SELECT_ALL': {
+        return {
+          name: 'hello world'
+        }
+      }
+    }
+
+    throw Error('Unknown action: ' + action.type)
+  }
+
+  const [state_selector, dispatch_selector] = useReducer(reducer_selector, {})
 
   const selector_selectItem = (e: any, row: any) => {
-    console.log('asd - ', selector_lookup[row.raw.id])
+    dispatch_selector({ type: 'SELECT_ALL' })
+    console.log('state_selector - ', state_selector)
+
+    // TODO: look into using useState with object as value
+    // https://stackoverflow.com/questions/54715131/how-to-use-react-usestate-hook-for-an-object
 
     /*
-      TODO:
-      look into using useState with object as value
-    */
+    if (selector_lookup.hasOwnProperty(row.raw.id)) {
+      delete u_selector_lookup[row.raw.id]
+      set_selector_lookup((prevdata) => {
+        const newdata = {
+          ...prevdata,
+          ...u_selector_lookup
+        }
+        delete newdata[row.raw.id]
+        return newdata
+      })
+      matchColumnsAndRows()
 
-    debugger
-    if (selector_lookup[row.raw.id]) {
-      debugger
-      delete selector_lookup[row.raw.id]
-      matchColumnsAndRows()
-      return
-    } else {
-      debugger
-      selector_lookup[row.raw.id] = row.raw
-      matchColumnsAndRows()
+      console.log('selector_lookup - ', selector_lookup)
+      console.log('u_selector_lookup - ', u_selector_lookup)
       return
     }
+    */
+
+    u_selector_lookup[row.raw.id] = row.raw
+  
+    const sd = {
+      ...selector_lookup,
+      [row.raw.id]: row.raw
+    }
+
+    set_selector_lookup(sd)
+
+    matchColumnsAndRows()
+
+    console.log('selector_lookup - ', selector_lookup)
+    console.log('u_selector_lookup - ', u_selector_lookup)
   }
 
   const selector_selectAll = (e: any) => {
     if (e.target.checked) {
       // add all l_rows in selector_lookup
       rows.forEach((row: any) => {
-        selector_lookup[row.id] = row
+        u_selector_lookup[row.id] = row
       })
+      set_selector_lookup(selector_lookup => ({
+        ...selector_lookup,
+        ...u_selector_lookup
+      }))
       matchColumnsAndRows()
       return
 
     } else {
       // remove all l_rows in selector_lookup
       rows.forEach((row: any) => {
-        delete selector_lookup[row.id]
+        delete u_selector_lookup[row.id]
+        set_selector_lookup(prevdata => {
+          const newdata = {
+            ...prevdata,
+            ...u_selector_lookup
+          }
+          delete selector_lookup[row.id]
+          return newdata
+        })
       })
       matchColumnsAndRows()
       return
@@ -161,7 +219,7 @@ const Table = ({
 
 
   // ------ JSX stuff ------
-  const t_columns = columns.map((col: any, key: any) => {
+  const TableColumns = columns.map((col: any, key: any) => {
     return (
       <th key={key}>
         {col.name}
@@ -169,7 +227,7 @@ const Table = ({
     )
   })
 
-  const t_rows = l_rows.map((row: any, rowkey: any) => {
+  const TableRows = l_rows.map((row: any, rowkey: any) => {
     return (
       <tr key={rowkey}>
         { selector && 
@@ -198,6 +256,7 @@ const Table = ({
 
   return (
     <div className="overflow-x-auto">
+      { state_selector.name }
       <table className="table">
         <thead>
           <tr>
@@ -207,11 +266,11 @@ const Table = ({
               </th>
             }
 
-            {t_columns}
+            {TableColumns}
           </tr>
         </thead>
         <tbody>
-          {t_rows}
+          {TableRows}
         </tbody>
       </table>
 
